@@ -9,10 +9,16 @@
             {{ session('message')}}
         </div>
         @endif
+        <section>
+            @if($image)
+            <img src="{{ $image }}" width="100" height="100">
+            @endif
+            <input type="file" id="image" wire:change="fileChosen">
+        </section>
         <form class="my-4 flex" wire:submit.prevent="addComment">
             <input type="text" wire:model.debounce.500ms="newComment" class="w-full rounded border shadow p-2 mr-2 my-2" placeholder="What's in your mind.">
             <div class="py-2">
-                <button class="p-2 bg-blue-500 w-20 rounded shadow text-white">Add</button>
+            <button class="p-2 bg-blue-500 w-20 rounded shadow text-white">Add</button>
             </div>
         </form>
         @forelse($comments as $comment)
@@ -28,9 +34,13 @@
             <p class="text-grey-800">
             {{ $comment->body }}
             </p>
+            @if ($comment->image )
+            <img src="{{ $comment->ImagePath }}" width="100" height="100">
+            @endif
         </div>
         @empty
         <p>No items found.</p>
     @endforelse
+    {{ $comments->links() }}
     </div>
 </div>
