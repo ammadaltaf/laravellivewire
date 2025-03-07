@@ -14,12 +14,17 @@ class Comments extends Component
 {
     use WithPagination;
     public $newComment , $image;
+    public $ticketId;
 
     protected $listeners = [
         'fileUpload' => 'handleFileUpload',
+        'ticketSelected' => 'handleTicketSelected',
         'filechoosen'
     ];
-
+    public function handleTicketSelected($ticketId){
+        // dd($ticketId);
+        $this->ticketId  = $ticketId;
+    }
     public function handleFileUpload($data){
         // dd($data);
         $this->image = $data;
@@ -30,7 +35,9 @@ class Comments extends Component
     }
 
     public function storeImage(){
-        if(!$this->image) return null;
+        if(!$this->image){
+            return '';
+        } 
         $manager = new ImageManager(new Driver());
         $img = $manager->read($this->image)->encode(new JpegEncoder());
         $name = Str::random().'.jpg';
@@ -40,7 +47,7 @@ class Comments extends Component
     // public $comments;
     public function render()
     {
-        return view('livewire.comments',['comments'=>Comment::latest()->paginate(2)]);
+        return view('livewire.comments',['comments'=>Comment::where('support_ticket_id',$this->ticketId)->latest()->paginate(2)]);
     }
     
     public function addComment(){
@@ -49,6 +56,7 @@ class Comments extends Component
         $created = Comment::create([
             'body'=> $this->newComment,
             'user_id'=> 1,
+            'support_ticket_id'=> $this->ticketId,
             'image'=> $image
         ]);
         // $this->comments->prepend($created);

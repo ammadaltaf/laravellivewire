@@ -10,16 +10,24 @@
         @livewireStyles
         
     </head>
-    <body class="flex justify-center">
-        <div class="w-10/12 my-10 flex">
-            <div class="w-5/12 rounded border p-2">
-            <livewire:tickets/>
+    <body class="flex flex-wrap justify-center">
+        <div class="flex w-full justify-between px-4 bg-purple-900 text-white">
+            <a href="{{ route('home') }}" class="mx-3 py-4" wire:navigate>Home</a>
+            @auth
+            <livewire:logout/>
+            @endauth
+            @guest
+            <div class="py-4">
+                <a href="{{ route('login') }}" class="mx-3" wire:navigate>Login</a>
+                <a href="{{ route('register') }}" class="mx-3" wire:navigate>Register</a>
             </div>
-            <div class="w-7/12 mx-2 rounded border p-2">
-            <livewire:comments/>
-            </div>
+            @endguest
         </div>
-    @livewireScripts
+        <div class="my-10 w-full flex justify-center">
+        {{ $slot }}
+        </div>
+       
+        @livewireScripts
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('image').addEventListener('change', function (event) {
@@ -41,4 +49,4 @@
     });
 </script>
     </body>
-</html> 
+</html>
